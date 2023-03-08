@@ -162,18 +162,25 @@ class Enemy {
     draw() {
         c.drawImage(
             this.currentSprite,
+            100,
             0,
-            0,
-            this.currentSprite.width -100,
+            this.currentSprite.width + 200,
             this.currentSprite.height,
             this.position.x,
             this.position.y,
-            this.width + 50,
+            200,
             this.height + 5
         )
     }
 
     attack() {
+        c.fillStyle = 'red'
+        c.fillRect(
+            this.position.x,
+            400,
+            this.currentSprite.width,
+            this.currentSprite.height
+            )
         // c.fillStyle = 'red'
         // c.fillRect(
         //     this.attackBox.x, 
@@ -184,6 +191,7 @@ class Enemy {
     }
 
     update() {
+        this.attack()
     this.frameSpeed++
     if (this.frameSpeed % 10 === 0) {
     this.currentFrame++

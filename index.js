@@ -212,11 +212,11 @@ const enemy = new Enemy({
         y: -300
     },
     velocity: {
-        dx: -1,
+        dx: 0,
         dy: 0
     },
-    width: 500,
-    height: 800
+    width: createImage('./img/monster/01_demon_idle/idle1.png').width,
+    height: createImage('./img/monster/01_demon_idle/idle1.png').height
 })
 
 const player = new Player({
