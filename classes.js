@@ -121,46 +121,51 @@ class Enemy {
         this.gravity = 1
         this.image = image
         this.frames = 0
+        this.currentFrame = 1
         this.frameSpeed = 0
+        this.currentFolder = '01_demon_idle'
         this.sprites = {
-            idle: {
-                right: createImage('./img/monster/demon.png'),
-                left: createImage('./img/Knight-Idle-Sheet.png'),
-                frameCount: 5,
-                exactFrame: 5
-            },
-            walk: {
-                right: createImage('./img/walkRight.png'),
-                left: createImage('./img/Walk.png'),
-                frameCount: 8
-            },
-            attack: {
-                right: createImage('./img/atkRight.png'),
-                left: createImage('./img/Knight-Attack-Sheet.png'),
-                frameCount: 7
-            }
-        }
+          idle: {
+            right: createImage(
+              `./img/monster/01_demon_idle/idle${this.currentFrame}.png`
+            ),
+            left: createImage(
+              `./img/monster/01_demon_idle/idle${this.currentFrame}.png`
+            ),
+            frameCount: 5,
+            exactFrame: 5,
+          },
+          walk: {
+            right: createImage(`./img/monster/02_demon_walk_right/image (${this.currentFrame}).png`),
+            left: createImage(`./img/monster/02_demon_walk/demon_walk_${this.currentFrame}.png`),
+            frameCount: 8,
+          },
+          attack: {
+            right: createImage("./img/atkRight.png"),
+            left: createImage("./img/Knight-Attack-Sheet.png"),
+            frameCount: 7,
+          },
+        };
         this.attackBox = {
             x: this.position.x,
             y: this.position.y,
             atkWidth: 5,
             atkHeight: 100
         }
-        this.currentSprite = this.sprites.idle.right
-        
+        this.currentSprite = this.sprites.idle.left
         this.frameCount = this.sprites.idle.frameCount
     }
     draw() {
         c.drawImage(
             this.currentSprite,
-            this.currentSprite.width/6 * 0,
             0,
-            (this.currentSprite.width - (this.currentSprite.width/16))/20,
-            this.currentSprite.height/4,
+            0,
+            this.currentSprite.width,
+            this.currentSprite.height,
             this.position.x,
             this.position.y,
             this.width,
-            this.height
+            this.height + 5
         )
     }
 
@@ -175,6 +180,31 @@ class Enemy {
     }
 
     update() {
+    this.frameSpeed++
+    if (this.frameSpeed % 10 === 0) {
+    this.currentFrame++
+    }
+    if (this.velocity.dx === 0) {
+    this.sprites.idle.left = createImage(`./img/monster/01_demon_idle/idle${this.currentFrame}.png`)
+    this.currentSprite = this.sprites.idle.left
+    }
+    if (this.velocity.dx < 0) {
+        this.sprites.walk.left = createImage(`./img/monster/02_demon_walk/demon_walk_${this.currentFrame}.png`)
+        this.currentSprite = this.sprites.walk.left
+    }
+    if (this.velocity.dx > 0) {
+        this.sprites.walk.right = createImage(`./img/monster/02_demon_walk_right/image (${this.currentFrame}).png`)
+        this.currentSprite = this.sprites.walk.right
+    }
+    // FRAMES FOR SPRITES
+    if (this.currentFrame > 5 && this.currentSprite === this.sprites.idle.left) {
+        this.currentFrame = 1
+    }
+    if (this.currentFrame > 11 && (this.currentSprite === this.sprites.walk.left || this.currentSprite === this.sprites.walk.right)) {
+        this.currentFrame = 1
+    }
+
+    // UTILITIES
     if (keys.lastKey === 'd') {
         this.attackBox = {
             x: this.position.x +65,
@@ -190,7 +220,7 @@ class Enemy {
             atkHeight: 90
         }
     }
-        this.frameSpeed++
+        
         if (this.frameSpeed % 10 === 0) {
             this.frames++
         }

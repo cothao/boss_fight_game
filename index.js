@@ -186,19 +186,7 @@ new Background({
 })
 ]
 
-const player = new Player({
-    position: {
-        x: 100,
-        y:100
-    },
-    width: 100,
-    height: 100,
-    velocity: {
-        dx: 0,
-        dy:10
-    },
-    currentSprite: createImage('./img/image.png'),
-})
+
 
 
 
@@ -219,16 +207,31 @@ for (let i = 0; i<20; i++) {
 
 const enemy = new Enemy({
     position: {
-        x: 200,
+        x: 100,
         y: 100
     },
     velocity: {
-        dx: 0,
+        dx: -1,
         dy: 0
     },
-    width: 300,
-    height: 300
+    width: 800,
+    height: 500
 })
+
+const player = new Player({
+  position: {
+    x: 100,
+    y: 100,
+  },
+  width: 100,
+  height: 100,
+  velocity: {
+    dx: 0,
+    dy: 10,
+  },
+  currentSprite: createImage("./img/image.png"),
+});
+
 
 const animate = () => {
     window.requestAnimationFrame(animate)
@@ -244,8 +247,8 @@ const animate = () => {
             player.velocity.dx = 0
         }
     })
+    enemy.update();
     player.update()
-    enemy.update()
     platforms.forEach(platform => platform.update())
     platforms.forEach(platform => {
         if (player.position.x > 400 && keys.right.pressed) {
@@ -264,6 +267,18 @@ const animate = () => {
         }
         
     })
+    platforms.forEach((platform) => {
+      if (
+        enemy.position.y + enemy.height <= platform.position.y &&
+        enemy.position.y + enemy.height + enemy.velocity.dy >=
+          platform.position.y &&
+        enemy.position.x + enemy.width > platform.position.x &&
+        enemy.position.x - enemy.width / 2 <
+          platform.position.x + platform.width
+      ) {
+        enemy.velocity.dy = 0;
+      }
+    });
     if (keys.right.pressed) {
         player.velocity.dx = 10
         if (keys.attack.pressed && keys.lastKey === 'd') {
@@ -311,7 +326,11 @@ const animate = () => {
                 console.log('hit')
             }
         }
-    
+    if (enemy.position.x < -300) {
+        enemy.velocity.dx = -enemy.velocity.dx
+    } else if (enemy.position.x > 200) {
+        enemy.velocity.dx = -enemy.velocity.dx
+    }
 }
 
 animate()
