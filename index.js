@@ -208,7 +208,7 @@ for (let i = 0; i<20; i++) {
 const enemy = new Enemy({
     position: {
         x: 100,
-        y: 100
+        y: -300
     },
     velocity: {
         dx: -1,
