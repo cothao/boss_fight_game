@@ -247,8 +247,7 @@ const animate = () => {
             player.velocity.dx = 0
         }
     })
-    enemy.update();
-    player.update()
+    
     platforms.forEach(platform => platform.update())
     platforms.forEach(platform => {
         if (player.position.x > 400 && keys.right.pressed) {
@@ -279,6 +278,13 @@ const animate = () => {
         enemy.velocity.dy = 0;
       }
     });
+    enemy.update();
+    player.update();
+    if (player.position.x > 400) {
+        enemy.position.x -= 3
+    } else if (player.position.x < 100) {
+        enemy.position.x += 3
+    }
     if (keys.right.pressed) {
         player.velocity.dx = 10
         if (keys.attack.pressed && keys.lastKey === 'd') {
