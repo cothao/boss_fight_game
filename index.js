@@ -1,6 +1,7 @@
 const canvas = document.querySelector('canvas')
 const c = canvas.getContext('2d')
-
+const enemyHealth = document.querySelector('.healthbar')
+console.log()
 canvas.width = innerWidth
 canvas.height = innerHeight
 
@@ -214,8 +215,8 @@ const enemy = new Enemy({
         dx: -1,
         dy: 0
     },
-    width: 800,
-    height: 500
+    width: 500,
+    height: 800
 })
 
 const player = new Player({
@@ -230,6 +231,7 @@ const player = new Player({
     dy: 10,
   },
   currentSprite: createImage("./img/image.png"),
+  damage: 10
 });
 
 
@@ -329,7 +331,9 @@ const animate = () => {
         if (player.isAttacking && (player.frames === 5 || player.frames === 6)) {
             if (collisionDetection(player, enemy)) {
                 player.isAttacking = false
-                console.log('hit')
+                keys.attack.pressed = false
+                enemyHealth.style.width = `${parseInt(enemyHealth.style.width) - player.damage}%`
+            console.log(enemyHealth.style.width)
             }
         }
     if (enemy.position.x < -300) {

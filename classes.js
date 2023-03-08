@@ -1,5 +1,5 @@
 class Player {
-    constructor({position, width, height, velocity, image, atkWidth, atkHeight, atkPosition}) {
+    constructor({position, width, height, velocity, image, damage}) {
         this.position = position
         this.width = width
         this.height = height
@@ -34,6 +34,7 @@ class Player {
         this.currentSprite = this.sprites.idle.right
         
         this.frameCount = this.sprites.idle.frameCount
+        this.damage = damage
     }
     draw() {
         c.drawImage(
@@ -145,6 +146,9 @@ class Enemy {
             left: createImage("./img/Knight-Attack-Sheet.png"),
             frameCount: 7,
           },
+          death: {
+            left: createImage(`./img/monster/05_demon_death/demon_death_${this.currentFrame}.png`)
+          }
         };
         this.attackBox = {
             x: this.position.x,
@@ -160,11 +164,11 @@ class Enemy {
             this.currentSprite,
             0,
             0,
-            this.currentSprite.width,
+            this.currentSprite.width -100,
             this.currentSprite.height,
             this.position.x,
             this.position.y,
-            this.width,
+            this.width + 50,
             this.height + 5
         )
     }
@@ -184,9 +188,14 @@ class Enemy {
     if (this.frameSpeed % 10 === 0) {
     this.currentFrame++
     }
-    if (this.velocity.dx === 0) {
+    if (this.velocity.dx === 0 && enemyHealth.style.width != '0%') {
     this.sprites.idle.left = createImage(`./img/monster/01_demon_idle/idle${this.currentFrame}.png`)
     this.currentSprite = this.sprites.idle.left
+    } 
+    if (enemyHealth.style.width === '0%') {
+        this.velocity.dx = 0
+        this.sprites.death.left = createImage(`./img/monster/05_demon_death/demon_death_${this.currentFrame}.png`)
+        this.currentSprite = this.sprites.death.left
     }
     if (this.velocity.dx < 0) {
         this.sprites.walk.left = createImage(`./img/monster/02_demon_walk/demon_walk_${this.currentFrame}.png`)
@@ -203,7 +212,9 @@ class Enemy {
     if (this.currentFrame > 11 && (this.currentSprite === this.sprites.walk.left || this.currentSprite === this.sprites.walk.right)) {
         this.currentFrame = 1
     }
-
+    if (this.currentFrame > 21 && (this.currentSprite === this.sprites.death.left || this.currentSprite === this.sprites.death.right)) {
+        return;
+    }
     // UTILITIES
     if (keys.lastKey === 'd') {
         this.attackBox = {
