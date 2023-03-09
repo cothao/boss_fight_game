@@ -21,6 +21,17 @@ const collisionDetection = function(player, enemy) {
     }
     }
 
+    const playerDetection = function (player, enemy) {
+      return (
+        ((player.position.x + player.width > enemy.attackBox.x 
+        && player.position.x + player.width < enemy.attackBox.x + enemy.attackBox.atkWidth)
+        || (player.position.x < enemy.attackBox.x + enemy.attackBox.atkWidth 
+        && player.position.x > enemy.attackBox.x)) &&
+        ((player.position.y < enemy.attackBox.y && player.position.y > enemy.attackBox.y - enemy.attackBox.atkHeight)
+        || (player.position.y < enemy.attackBox.y + enemy.attackBox.atkHeight && player.position.y > enemy.attackBox.y))
+      );
+    };
+
 const createImage = function(imageSrc) {
     const image = new Image()
     image.src = imageSrc
@@ -208,11 +219,11 @@ for (let i = 0; i<20; i++) {
 
 const enemy = new Enemy({
     position: {
-        x: 100,
+        x: 200,
         y: -300
     },
     velocity: {
-        dx: 0,
+        dx: -1,
         dy: 0
     },
     width: createImage('./img/monster/01_demon_idle/idle1.png').width,
@@ -336,9 +347,12 @@ const animate = () => {
             console.log(enemyHealth.style.width)
             }
         }
-    if (enemy.position.x < -300) {
+        if (playerDetection(player, enemy)) {
+            console.log('seen')
+        }
+    if (enemy.position.x < 100) {
         enemy.velocity.dx = -enemy.velocity.dx
-    } else if (enemy.position.x > 200) {
+    } else if (enemy.position.x > 400) {
         enemy.velocity.dx = -enemy.velocity.dx
     }
 }

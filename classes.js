@@ -189,13 +189,13 @@ class Enemy {
         //     288,
         //     460
         //     )
-        // c.fillStyle = 'red'
-        // c.fillRect(
-        //     this.attackBox.x, 
-        //     this.attackBox.y,
-        //     this.attackBox.atkWidth,
-        //     this.attackBox.atkHeight
-        //     )
+        c.fillStyle = 'red'
+        c.fillRect(
+            this.attackBox.x, 
+            this.attackBox.y,
+            this.attackBox.atkWidth,
+            this.attackBox.atkHeight
+            )
     }
 
     update() {
@@ -232,37 +232,7 @@ class Enemy {
         return;
     }
     // UTILITIES
-    if (keys.lastKey === 'd') {
-        this.attackBox = {
-            x: this.position.x +65,
-            y: this.position.y + 20,
-            atkWidth: 35,
-            atkHeight: 90
-        }
-    } else if (keys.lastKey === 'a') {
-        this.attackBox = {
-            x: this.position.x -65,
-            y: this.position.y + 20,
-            atkWidth: 35,
-            atkHeight: 90
-        }
-    }
-        
-        if (this.frameSpeed % 10 === 0) {
-            this.frames++
-        }
-        if (this.frames > 5 && this.currentSprite === this.sprites.idle.right 
-            || this.frames > 5 && this.currentSprite === this.sprites.idle.left) {
-            this.frames = 0
-        }
-        if (this.frames > 7 && this.currentSprite === this.sprites.walk.right 
-            || this.frames > 7 && this.currentSprite === this.sprites.walk.left) {
-            this.frames = 0
-        }
-        if (this.frames > 6 && this.currentSprite === this.sprites.attack.right 
-            || this.frames > 6 && this.currentSprite === this.sprites.attack.left) {
-            this.frames = 0
-        }
+
         this.position.x += this.velocity.dx
         this.position.y += this.velocity.dy
         if (this.position.y + this.height < canvas.height) {
@@ -272,15 +242,22 @@ class Enemy {
           this.velocity.dy = 0;
         } 
         this.draw()
-        if (keys.attack.pressed === true) {
-            this.attack()
-            this.isAttacking = true
-            setTimeout (() => {
-                this.isAttacking = false
-                keys.attack.pressed = false
-            }, 400
-            )
+        // PLAYER DETECTION
+        if (this.currentSprite === this.sprites.walk.left) {
+        this.attackBox = {
+            x: this.position.x -180,
+            y: this.position.y -40,
+            atkWidth: 250,
+            atkHeight: 500
         }
+    } else if (this.currentSprite === this.sprites.walk.right) {
+        this.attackBox = {
+            x: this.position.x +180,
+            y: this.position.y +40,
+            atkWidth: 250,
+            atkHeight: 500
+        }
+    }
     }
 }
 
