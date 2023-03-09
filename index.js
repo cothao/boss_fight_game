@@ -216,7 +216,7 @@ const enemy = new Enemy({
         dy: 0
     },
     width: createImage('./img/monster/01_demon_idle/idle1.png').width,
-    height: createImage('./img/monster/01_demon_idle/idle1.png').height
+    height: createImage('./img/monster/01_demon_idle/idle1.png').height +300
 })
 
 const player = new Player({
@@ -224,14 +224,14 @@ const player = new Player({
     x: 100,
     y: 100,
   },
-  width: 100,
-  height: 100,
+  width: createImage("./img/image.png").width -250,
+  height: createImage("./img/image.png").height,
   velocity: {
     dx: 0,
     dy: 10,
   },
   currentSprite: createImage("./img/image.png"),
-  damage: 10
+  damage: 10,
 });
 
 

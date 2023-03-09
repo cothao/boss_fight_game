@@ -43,35 +43,43 @@ class Player {
             0,
             this.currentSprite.width/this.frameCount,
             this.currentSprite.height,
-            this.position.x,
+            this.position.x -30,
             this.position.y,
-            this.width,
+            this.width +100,
             this.height
         )
     }
 
     attack() {
-        // c.fillStyle = 'red'
-        // c.fillRect(
-        //     this.attackBox.x, 
-        //     this.attackBox.y,
-        //     this.attackBox.atkWidth,
-        //     this.attackBox.atkHeight
-        //     )
+    //   c.fillStyle = 'red'
+    //   c.fillRect(
+    //       this.position.x,
+    //       this.position.y,
+    //       this.currentSprite.width +40 -250,
+    //       this.currentSprite.height
+    //       )
+    //   c.fillStyle = 'black'
+    //   c.fillRect(
+    //       this.attackBox.x,
+    //       this.attackBox.y,
+    //       this.attackBox.atkWidth,
+    //       this.attackBox.atkHeight
+    //       )
     }
 
     update() {
+        this.attack()
     if (keys.lastKey === 'd') {
         this.attackBox = {
-            x: this.position.x +65,
-            y: this.position.y + 20,
+            x: this.position.x +40,
+            y: this.position.y,
             atkWidth: 35,
             atkHeight: 90
         }
     } else if (keys.lastKey === 'a') {
         this.attackBox = {
-            x: this.position.x -65,
-            y: this.position.y + 20,
+            x: this.position.x -30,
+            y: this.position.y + 10,
             atkWidth: 35,
             atkHeight: 90
         }
@@ -162,25 +170,25 @@ class Enemy {
     draw() {
         c.drawImage(
             this.currentSprite,
-            100,
             0,
-            this.currentSprite.width + 200,
+            50,
+            this.currentSprite.width,
             this.currentSprite.height,
-            this.position.x,
+            this.position.x -375,
             this.position.y,
-            200,
-            this.height + 5
+            this.width + 750,
+            this.height + 220
         )
     }
 
     attack() {
-        c.fillStyle = 'red'
-        c.fillRect(
-            this.position.x,
-            400,
-            this.currentSprite.width,
-            this.currentSprite.height
-            )
+        // c.fillStyle = 'red'
+        // c.fillRect(
+        //     this.position.x,
+        //     this.position.y,
+        //     288,
+        //     460
+        //     )
         // c.fillStyle = 'red'
         // c.fillRect(
         //     this.attackBox.x, 
