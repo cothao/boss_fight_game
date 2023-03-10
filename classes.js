@@ -136,7 +136,7 @@ class Enemy {
         this.sprites = {
           idle: {
             right: createImage(
-              `./img/monster/01_demon_idle/idle${this.currentFrame}.png`
+              `./img/monster/01_demon_idle_right/image (${this.currentFrame}).png`
             ),
             left: createImage(
               `./img/monster/01_demon_idle/idle${this.currentFrame}.png`
@@ -189,13 +189,13 @@ class Enemy {
         //     288,
         //     460
         //     )
-        c.fillStyle = 'red'
-        c.fillRect(
-            this.attackBox.x, 
-            this.attackBox.y,
-            this.attackBox.atkWidth,
-            this.attackBox.atkHeight
-            )
+        // c.fillStyle = 'red'
+        // c.fillRect(
+        //     this.attackBox.x, 
+        //     this.attackBox.y,
+        //     this.attackBox.atkWidth,
+        //     this.attackBox.atkHeight
+        //     )
     }
 
     update() {
@@ -205,8 +205,39 @@ class Enemy {
     this.currentFrame++
     }
     if (this.velocity.dx === 0 && enemyHealth.style.width != '0%') {
+        if (this.currentFrame > 6) {
+            this.currentFrame = 1
+        }
     this.sprites.idle.left = createImage(`./img/monster/01_demon_idle/idle${this.currentFrame}.png`)
     this.currentSprite = this.sprites.idle.left
+    }
+    if (
+      this.velocity.dx === 0 &&
+      enemyHealth.style.width != "0%" &&
+      playerDetection(player, enemy) &&
+      this.position.x < player.position.x
+    ) {
+      if (this.currentFrame > 6) {
+        this.currentFrame = 1;
+      }
+      this.sprites.idle.right = createImage(
+        `./img/monster/01_demon_idle_right/image (${this.currentFrame}).png`
+      );
+      this.currentSprite = this.sprites.idle.right;
+    }
+    if (
+      this.velocity.dx === 0 &&
+      enemyHealth.style.width != "0%" &&
+      playerDetection(player, enemy) &&
+      this.currentSprite === this.sprites.walk.left
+    ) {
+        if (this.currentFrame > 6) {
+      this.currentFrame = 1;
+    }
+      this.sprites.idle.left = createImage(
+        `./img/monster/01_demon_idle/idle${this.currentFrame}.png`
+      );
+      this.currentSprite = this.sprites.idle.left;
     } 
     if (enemyHealth.style.width === '0%') {
         this.velocity.dx = 0
@@ -245,16 +276,16 @@ class Enemy {
         // PLAYER DETECTION
         if (this.currentSprite === this.sprites.walk.left) {
         this.attackBox = {
-            x: this.position.x -180,
+            x: this.position.x -120,
             y: this.position.y -40,
-            atkWidth: 250,
+            atkWidth: 400,
             atkHeight: 500
         }
     } else if (this.currentSprite === this.sprites.walk.right) {
         this.attackBox = {
-            x: this.position.x +180,
+            x: this.position.x +60,
             y: this.position.y +40,
-            atkWidth: 250,
+            atkWidth: 400,
             atkHeight: 500
         }
     }

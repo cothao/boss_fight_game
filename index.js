@@ -45,6 +45,9 @@ const keys = {
     left: {
         pressed: false
     },
+    jump: {
+        pressed: false
+    },
     attack: {
         pressed: false
     },
@@ -219,7 +222,7 @@ for (let i = 0; i<20; i++) {
 
 const enemy = new Enemy({
     position: {
-        x: 200,
+        x: 300,
         y: -300
     },
     velocity: {
@@ -230,10 +233,18 @@ const enemy = new Enemy({
     height: createImage('./img/monster/01_demon_idle/idle1.png').height +300
 })
 
+let playerY
+
+  platforms.forEach((platform) => {
+    playerY = platform.position.y - platform.height -80;
+  });
+
+console.log(playerY)
+
 const player = new Player({
   position: {
     x: 100,
-    y: 100,
+    y: playerY,
   },
   width: createImage("./img/image.png").width -250,
   height: createImage("./img/image.png").height,
@@ -246,115 +257,151 @@ const player = new Player({
 });
 
 
+
+
 const animate = () => {
-    window.requestAnimationFrame(animate)
-    c.fillStyle = 'black'
-    c.fillRect(0,0, canvas.width, canvas.height)
-    backgrounds.forEach(background => {
-        background.update()
-        if (player.position.x > 400 && keys.right.pressed) {
-            background.position.x -= 3
-            player.velocity.dx = 0
-        } else if (player.position.x < 100 && keys.left.pressed) {
-            background.position.x += 3
-            player.velocity.dx = 0
-        }
-    })
-    
-    platforms.forEach(platform => platform.update())
-    platforms.forEach(platform => {
-        if (player.position.x > 400 && keys.right.pressed) {
-            platform.position.x -= 10
-        } else if (player.position.x < 100 && keys.left.pressed) {
-            platform.position.x += 10
-        }
-        if (
-            player.position.y + player.height <= platform.position.y &&
-            player.position.y + player.height + player.velocity.dy >= platform.position.y &&
-            player.position.x + player.width > platform.position.x &&
-            player.position.x - player.width/2 < platform.position.x + platform.width
-            ) 
-            {
-            player.velocity.dy = 0
-        }
-        
-    })
-    platforms.forEach((platform) => {
-      if (
-        enemy.position.y + enemy.height <= platform.position.y &&
-        enemy.position.y + enemy.height + enemy.velocity.dy >=
-          platform.position.y &&
-        enemy.position.x + enemy.width > platform.position.x &&
-        enemy.position.x - enemy.width / 2 <
-          platform.position.x + platform.width
-      ) {
-        enemy.velocity.dy = 0;
-      }
-    });
-    enemy.update();
-    player.update();
-    if (player.position.x > 400) {
-        enemy.position.x -= 3
-    } else if (player.position.x < 100) {
-        enemy.position.x += 3
+  window.requestAnimationFrame(animate);
+  c.fillStyle = "black";
+  c.fillRect(0, 0, canvas.width, canvas.height);
+  backgrounds.forEach((background) => {
+    background.update();
+    if (player.position.x > 400 && keys.right.pressed) {
+      background.position.x -= 3;
+      player.velocity.dx = 0;
+    } else if (player.position.x < 100 && keys.left.pressed) {
+      background.position.x += 3;
+      player.velocity.dx = 0;
     }
-    if (keys.right.pressed) {
-        player.velocity.dx = 10
-        if (keys.attack.pressed && keys.lastKey === 'd') {
-            player.currentSprite = player.sprites.attack.right
-            player.frameCount = player.sprites.attack.frameCount
-        }
-        if (!keys.attack.pressed) { 
-        player.currentSprite = player.sprites.walk.right
-        player.frameCount = player.sprites.walk.frameCount
+    //PARALAX UPWARD AND DOWNWARD. FOR LATER
+    // if (player.position.y < 500) {
+    //     background.position.y += 3;
+    // } else if (player.position.y > 100) {
+    //     background.position.y -= 0
+    // }
+  });
+
+  platforms.forEach((platform) => platform.update());
+  platforms.forEach((platform) => {
+    if (player.position.x > 400 && keys.right.pressed) {
+      platform.position.x -= 10;
+    } else if (player.position.x < 100 && keys.left.pressed) {
+      platform.position.x += 10;
     }
-    } else if (keys.left.pressed) {
-        player.velocity.dx = -10
-        if (keys.attack.pressed && keys.lastKey === 'a') {
-            player.currentSprite = player.sprites.attack.left
-            player.frameCount = player.sprites.attack.frameCount
-        }
-        if (!keys.attack.pressed) {
-        player.currentSprite = player.sprites.walk.left
-        player.frameCount = player.sprites.walk.frameCount
-        }
-    } else {
-        player.velocity.dx = 0
-        if (keys.lastKey === 'd') {
-        player.currentSprite = player.sprites.idle.right
-        player.frameCount = player.sprites.idle.frameCount
+    if (
+      player.position.y + player.height <= platform.position.y &&
+      player.position.y + player.height + player.velocity.dy >=
+        platform.position.y &&
+      player.position.x + player.width > platform.position.x &&
+      player.position.x - player.width / 2 <
+        platform.position.x + platform.width
+    ) {
+      player.velocity.dy = 0;
     }
-        
-        if (keys.lastKey === 'a') {
-        player.currentSprite = player.sprites.idle.left
-        player.frameCount = player.sprites.idle.frameCount
-        }
-        
+    // FOR PARALAX
+    // if (player.position.y < 500) {
+    //   platform.position.y += 3;
+    // }
+  });
+  platforms.forEach((platform) => {
+    if (
+      enemy.position.y + enemy.height <= platform.position.y &&
+      enemy.position.y + enemy.height + enemy.velocity.dy >=
+        platform.position.y &&
+      enemy.position.x + enemy.width > platform.position.x &&
+      enemy.position.x - enemy.width / 2 < platform.position.x + platform.width
+    ) {
+      enemy.velocity.dy = 0;
     }
-    if (keys.attack.pressed === true && keys.lastKey === 'd') {
-        player.currentSprite = player.sprites.attack.right
-        player.frameCount = player.sprites.attack.frameCount
-    } else if (keys.attack.pressed && keys.lastKey === 'a') {
-        player.currentSprite = player.sprites.attack.left
-        player.frameCount = player.sprites.attack.frameCount
+  });
+  enemy.update();
+  player.update();
+  if (player.position.x > 400 && keys.right.pressed) {
+    enemy.position.x -= 3;
+    enemy.attackBox.x -= 3;
+  } else if (player.position.x < 100 && keys.left.pressed) {
+    enemy.position.x += 3;
+    enemy.attackBox.x += 3;
+  }
+  // PARALLAX
+//   if (player.position.y < 500) {
+//     enemy.position.y += 3;
+//     enemy.attackBox.y
+//   }
+  if (keys.right.pressed) {
+    player.velocity.dx = 10;
+    if (keys.attack.pressed && keys.lastKey === "d") {
+      player.currentSprite = player.sprites.attack.right;
+      player.frameCount = player.sprites.attack.frameCount;
     }
-    // PLAYER HIT
-        if (player.isAttacking && (player.frames === 5 || player.frames === 6)) {
-            if (collisionDetection(player, enemy)) {
-                player.isAttacking = false
-                keys.attack.pressed = false
-                enemyHealth.style.width = `${parseInt(enemyHealth.style.width) - player.damage}%`
-            console.log(enemyHealth.style.width)
-            }
-        }
-        if (playerDetection(player, enemy)) {
-            console.log('seen')
-        }
-    if (enemy.position.x < 100) {
-        enemy.velocity.dx = -enemy.velocity.dx
-    } else if (enemy.position.x > 400) {
-        enemy.velocity.dx = -enemy.velocity.dx
+    if (!keys.attack.pressed) {
+      player.currentSprite = player.sprites.walk.right;
+      player.frameCount = player.sprites.walk.frameCount;
     }
+  } else if (keys.left.pressed) {
+    player.velocity.dx = -10;
+    if (keys.attack.pressed && keys.lastKey === "a") {
+      player.currentSprite = player.sprites.attack.left;
+      player.frameCount = player.sprites.attack.frameCount;
+    }
+    if (!keys.attack.pressed) {
+      player.currentSprite = player.sprites.walk.left;
+      player.frameCount = player.sprites.walk.frameCount;
+    }
+  } else {
+    player.velocity.dx = 0;
+    if (keys.lastKey === "d") {
+      player.currentSprite = player.sprites.idle.right;
+      player.frameCount = player.sprites.idle.frameCount;
+    }
+
+    if (keys.lastKey === "a") {
+      player.currentSprite = player.sprites.idle.left;
+      player.frameCount = player.sprites.idle.frameCount;
+    }
+  }
+  if (keys.attack.pressed === true && keys.lastKey === "d") {
+    player.currentSprite = player.sprites.attack.right;
+    player.frameCount = player.sprites.attack.frameCount;
+  } else if (keys.attack.pressed && keys.lastKey === "a") {
+    player.currentSprite = player.sprites.attack.left;
+    player.frameCount = player.sprites.attack.frameCount;
+  }
+  // PLAYER HIT
+  if (player.isAttacking && (player.frames === 5 || player.frames === 6)) {
+    if (collisionDetection(player, enemy)) {
+      player.isAttacking = false;
+      keys.attack.pressed = false;
+      enemyHealth.style.width = `${
+        parseInt(enemyHealth.style.width) - player.damage
+      }%`;
+      console.log(enemyHealth.style.width);
+    }
+  }
+  if (playerDetection(player, enemy)) {
+    enemy.velocity.dx = 0
+  } else if (
+    (!playerDetection(player, enemy))
+  ) {
+    if (player.position.x > enemy.attackBox.x) {
+    enemy.velocity.dx = 1;
+    }
+    if (player.position.x < enemy.attackBox.x) {
+      enemy.velocity.dx = -1;
+    }
+  }
+//     if (
+//     (!playerDetection(player, enemy) && enemy.currentSprite === enemy.sprites.walk.left) 
+//     || enemy.currentSprite === enemy.sprites.idle.left
+//   ) {
+//     enemy.currentSprite = enemy.sprites.walk.left
+//     enemy.velocity.dx = -1;
+//   }
+//   if (enemy.position.x < 250) {
+//     console.log('REACH')
+//     enemy.velocity.dx = -enemy.velocity.dx;
+//   } else if (enemy.position.x > 1000) {
+//     enemy.velocity.dx = -enemy.velocity.dx;
+//   }
 }
 
 animate()
