@@ -6,6 +6,12 @@ console.log()
 canvas.width = innerWidth
 canvas.height = innerHeight
 
+addEventListener('resize', ()=> {
+    canvas.width = innerWidth;
+    canvas.height = innerHeight;
+    init()
+})
+
 c.fillRect(0, 0, canvas.width, canvas.height)
 
 const collisionDetection = function(player, enemy) {
@@ -48,7 +54,11 @@ const createImage = function(imageSrc) {
     return image
 }
 
-const keys = {
+let keys, backgrounds, platforms, enemy, playerY, player
+
+const init = function() {
+
+keys = {
     right: {
         pressed: false
     },
@@ -64,7 +74,7 @@ const keys = {
     lastKey: '' 
 }
 
-const backgrounds = [
+backgrounds = [
     new Background({
     position: {
         x: -50,
@@ -215,7 +225,7 @@ new Background({
 
 
 
-const platforms = []
+platforms = []
 
 for (let i = 0; i<20; i++) {
     
@@ -230,7 +240,7 @@ for (let i = 0; i<20; i++) {
     }))
 }
 
-const enemy = new Enemy({
+enemy = new Enemy({
     position: {
         x: 700,
         y: -300
@@ -244,15 +254,13 @@ const enemy = new Enemy({
     damage: 4
 })
 
-let playerY
-
   platforms.forEach((platform) => {
     playerY = platform.position.y - platform.height -80;
   });
 
 console.log(playerY)
 
-const player = new Player({
+player = new Player({
   position: {
     x: 100,
     y: playerY,
@@ -266,6 +274,9 @@ const player = new Player({
   currentSprite: createImage("./img/image.png"),
   damage: 10,
 });
+}
+
+init()
 
 const animate = () => {
   window.requestAnimationFrame(animate);
