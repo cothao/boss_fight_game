@@ -259,13 +259,13 @@ class Enemy {
     }
     /// ATTACK
     if (this.isAttacking === true) {
-        if (player.position.x >= enemy.attackBox.x && player.position.x <= enemy.attackBox.x + enemy.attackBox.atkWidth && enemy.position.x > enemy.attackBox.x) {
+        if (enemy.position.x >= enemy.attackBox.x) {
         this.currentSprite = this.sprites.attack.left
         this.sprites.attack.left = createImage(
           `./img/monster/03_demon_cleave/demon_cleave_${this.currentFrame}.png`
         )
         } 
-        if (enemy.position.x < enemy.attackBox.x) {
+        if (enemy.position.x <= enemy.attackBox.x) {
         this.currentSprite = this.sprites.attack.right
         this.sprites.attack.right = createImage(
           `./img/monster/03_demon_cleave_right/image (${this.currentFrame}).png`)
