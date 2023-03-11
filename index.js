@@ -1,17 +1,12 @@
 const canvas = document.querySelector('canvas')
 const c = canvas.getContext('2d')
 const enemyHealth = document.querySelector('.healthbar')
+const playerHealth = document.querySelector('.player-health')
 console.log()
 canvas.width = innerWidth
 canvas.height = innerHeight
 
 c.fillRect(0, 0, canvas.width, canvas.height)
-const call = function() {
-    setTimeout(()=> {
-        console.log('hit')
-        call()
-    },5000)
-}
 
 const collisionDetection = function(player, enemy) {
     if (player.isAttacking === true) {
@@ -26,6 +21,15 @@ const collisionDetection = function(player, enemy) {
                 && player.attackBox.y > enemy.position.y))
     }
     }
+
+const collisionDetectionEnemy = function(enemy, player) {
+    if (
+      (enemy.attackBox.x >= player.position.x &&
+      enemy.attackBox.x <= player.position.x + player.width)
+    ) {
+      console.log(true);
+    }
+}
 
     const playerDetection = function (player, enemy) {
       return (
@@ -236,7 +240,8 @@ const enemy = new Enemy({
         dy: 0
     },
     width: createImage('./img/monster/01_demon_idle/idle1.png').width,
-    height: createImage('./img/monster/01_demon_idle/idle1.png').height +300
+    height: createImage('./img/monster/01_demon_idle/idle1.png').height +300,
+    damage: 4
 })
 
 let playerY
@@ -282,7 +287,12 @@ const animate = () => {
     //     background.position.y -= 0
     // }
   });
+if (collisionDetection(enemy, player)) {
+    console.log('no')
+}
 
+collisionDetectionEnemy(enemy, player)
+    
   platforms.forEach((platform) => platform.update());
   platforms.forEach((platform) => {
     if (player.position.x > 400 && keys.right.pressed) {
@@ -318,6 +328,12 @@ const animate = () => {
   });
   enemy.update();
   player.update();
+  if (enemyHealth.style.width != `0%` ) {
+    enemy.isAlive = true
+  }
+  if (enemyHealth.style.width === `0%`) {
+    enemy.isAlive = false
+  }
   if (player.position.x > 400 && keys.right.pressed) {
     enemy.position.x -= 3;
     enemy.attackBox.x -= 3;
@@ -380,6 +396,7 @@ const animate = () => {
       console.log(enemyHealth.style.width);
     }
   }
+  
   if (playerDetection(player, enemy)) {
     enemy.velocity.dx = 0
     enemy.isAttacking = true
@@ -392,6 +409,21 @@ const animate = () => {
     }
     if (player.position.x < enemy.attackBox.x) {
       enemy.velocity.dx = -1;
+    }
+  }
+
+  if (
+    enemy.isAttacking &&
+    (enemy.currentFrame === 10 ||
+      enemy.currentFrame === 11 ||
+      enemy.currentFrame === 12)
+  ) {
+// GONNA FIX ATTACK ANIMATION SOON
+if (enemy.isAlive) {
+      enemy.isAttacking = false;
+      playerHealth.style.width = `${
+        parseInt(playerHealth.style.width) - enemy.damage
+      }%`;
     }
   }
 //     if (
@@ -443,3 +475,4 @@ addEventListener("keyup", (e) => {
       keys.lastKey = 'a'
   }
 });
+

@@ -122,7 +122,7 @@ class Player {
 }
 
 class Enemy {
-    constructor({position, width, height, velocity, image}) {
+    constructor({position, width, height, velocity, image, damage, isAlive}) {
         this.position = position
         this.width = width
         this.height = height
@@ -177,6 +177,8 @@ class Enemy {
         this.currentSprite = this.sprites.idle.left
         this.frameCount = this.sprites.idle.frameCount
         this.isAttacking = false
+        this.damage = damage
+        this.isAlive = true
     }
     draw() {
         c.drawImage(
@@ -274,7 +276,10 @@ class Enemy {
     }
     /// END OF ATTACK
     if (enemyHealth.style.width === '0%') {
+        // THIS WILL HANDLE THE DEATH ANIMATION STARTING FROM 0. do NOT FORGET//
+        // if (this.currentFrame )
         this.velocity.dx = 0
+        this.isAttacking = false
         this.sprites.death.left = createImage(`./img/monster/05_demon_death/demon_death_${this.currentFrame}.png`)
         this.currentSprite = this.sprites.death.left
     }
