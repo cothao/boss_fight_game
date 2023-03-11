@@ -3,4 +3,4 @@ Test it out here: https://cothao.github.io/boss_fight_game/
 
 Preview:
 
-![current preview](https://user-images.githubusercontent.com/114521616/224451436-555c7fd0-1e97-42cc-8f87-4b5a91421dd2.PNG)
+![bossfight](https://user-images.githubusercontent.com/114521616/224464698-a9492f87-15ad-43e9-9d22-56ed9962f31a.PNG)
