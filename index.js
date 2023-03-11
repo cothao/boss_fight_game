@@ -6,6 +6,12 @@ canvas.width = innerWidth
 canvas.height = innerHeight
 
 c.fillRect(0, 0, canvas.width, canvas.height)
+const call = function() {
+    setTimeout(()=> {
+        console.log('hit')
+        call()
+    },5000)
+}
 
 const collisionDetection = function(player, enemy) {
     if (player.isAttacking === true) {
@@ -222,7 +228,7 @@ for (let i = 0; i<20; i++) {
 
 const enemy = new Enemy({
     position: {
-        x: 300,
+        x: 700,
         y: -300
     },
     velocity: {
@@ -255,9 +261,6 @@ const player = new Player({
   currentSprite: createImage("./img/image.png"),
   damage: 10,
 });
-
-
-
 
 const animate = () => {
   window.requestAnimationFrame(animate);
@@ -379,9 +382,11 @@ const animate = () => {
   }
   if (playerDetection(player, enemy)) {
     enemy.velocity.dx = 0
+    enemy.isAttacking = true
   } else if (
     (!playerDetection(player, enemy))
   ) {
+    enemy.isAttacking = false
     if (player.position.x > enemy.attackBox.x) {
     enemy.velocity.dx = 1;
     }

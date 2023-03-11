@@ -122,7 +122,7 @@ class Player {
 }
 
 class Enemy {
-    constructor({position, width, height, velocity, image, atkWidth, atkHeight, atkPosition}) {
+    constructor({position, width, height, velocity, image}) {
         this.position = position
         this.width = width
         this.height = height
@@ -145,18 +145,28 @@ class Enemy {
             exactFrame: 5,
           },
           walk: {
-            right: createImage(`./img/monster/02_demon_walk_right/image (${this.currentFrame}).png`),
-            left: createImage(`./img/monster/02_demon_walk/demon_walk_${this.currentFrame}.png`),
+            right: createImage(
+              `./img/monster/02_demon_walk_right/image (${this.currentFrame}).png`
+            ),
+            left: createImage(
+              `./img/monster/02_demon_walk/demon_walk_${this.currentFrame}.png`
+            ),
             frameCount: 8,
           },
           attack: {
-            right: createImage("./img/atkRight.png"),
-            left: createImage("./img/Knight-Attack-Sheet.png"),
+            right: createImage(
+              `./img/monster/03_demon_cleave_right/image (${this.currentFrame}).png`
+            ),
+            left: createImage(
+              `./img/monster/03_demon_cleave/demon_cleave_${this.currentFrame}.png`
+            ),
             frameCount: 7,
           },
           death: {
-            left: createImage(`./img/monster/05_demon_death/demon_death_${this.currentFrame}.png`)
-          }
+            left: createImage(
+              `./img/monster/05_demon_death/demon_death_${this.currentFrame}.png`
+            ),
+          },
         };
         this.attackBox = {
             x: this.position.x,
@@ -166,6 +176,7 @@ class Enemy {
         }
         this.currentSprite = this.sprites.idle.left
         this.frameCount = this.sprites.idle.frameCount
+        this.isAttacking = false
     }
     draw() {
         c.drawImage(
@@ -204,7 +215,7 @@ class Enemy {
     if (this.frameSpeed % 10 === 0) {
     this.currentFrame++
     }
-    if (this.velocity.dx === 0 && enemyHealth.style.width != '0%') {
+    if (this.velocity.dx === 0 && enemyHealth.style.width != '0%' && !this.isAttacking) {
         if (this.currentFrame > 6) {
             this.currentFrame = 1
         }
@@ -215,7 +226,8 @@ class Enemy {
       this.velocity.dx === 0 &&
       enemyHealth.style.width != "0%" &&
       playerDetection(player, enemy) &&
-      this.position.x < player.position.x
+      this.position.x < player.position.x &&
+      this.isAttacking === false
     ) {
       if (this.currentFrame > 6) {
         this.currentFrame = 1;
@@ -229,7 +241,8 @@ class Enemy {
       this.velocity.dx === 0 &&
       enemyHealth.style.width != "0%" &&
       playerDetection(player, enemy) &&
-      this.currentSprite === this.sprites.walk.left
+      this.currentSprite === this.sprites.walk.left &&
+      this.isAttacking === false
     ) {
         if (this.currentFrame > 6) {
       this.currentFrame = 1;
@@ -238,7 +251,28 @@ class Enemy {
         `./img/monster/01_demon_idle/idle${this.currentFrame}.png`
       );
       this.currentSprite = this.sprites.idle.left;
-    } 
+    }
+    if (this.isAttacking && enemyHealth.style.width != '0%') {
+        if (this.currentFrame > 14) {
+            this.currentFrame = 1
+        }
+    }
+    /// ATTACK
+    if (this.isAttacking === true) {
+        if (player.position.x >= enemy.attackBox.x && player.position.x <= enemy.attackBox.x + enemy.attackBox.atkWidth && enemy.position.x > enemy.attackBox.x) {
+        this.currentSprite = this.sprites.attack.left
+        this.sprites.attack.left = createImage(
+          `./img/monster/03_demon_cleave/demon_cleave_${this.currentFrame}.png`
+        )
+        } 
+        if (enemy.position.x < enemy.attackBox.x) {
+        this.currentSprite = this.sprites.attack.right
+        this.sprites.attack.right = createImage(
+          `./img/monster/03_demon_cleave_right/image (${this.currentFrame}).png`)
+        }
+        ;
+    }
+    /// END OF ATTACK
     if (enemyHealth.style.width === '0%') {
         this.velocity.dx = 0
         this.sprites.death.left = createImage(`./img/monster/05_demon_death/demon_death_${this.currentFrame}.png`)
@@ -276,20 +310,21 @@ class Enemy {
         // PLAYER DETECTION
         if (this.currentSprite === this.sprites.walk.left) {
         this.attackBox = {
-            x: this.position.x -120,
-            y: this.position.y -40,
-            atkWidth: 400,
-            atkHeight: 500
+            x: this.position.x -200,
+            y: this.position.y + 270,
+            atkWidth: 500,
+            atkHeight: 200
         }
     } else if (this.currentSprite === this.sprites.walk.right) {
         this.attackBox = {
-            x: this.position.x +60,
-            y: this.position.y +40,
-            atkWidth: 400,
-            atkHeight: 500
+            x: this.position.x +50,
+            y: this.position.y +270,
+            atkWidth: 500,
+            atkHeight: 200
         }
     }
-    }
+    //PLAYER DETECTION
+}
 }
 
 
