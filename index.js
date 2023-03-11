@@ -443,6 +443,13 @@ if (enemy.isAlive) {
 
 animate()
 
+window.onload = function () {
+  if (!window.location.hash) {
+    window.location = window.location + "#loaded"; // this adds the hash to the location after one reload, meaning that the location will then HAVE a hash and the code will not run a second time.
+    window.location.reload();
+  }
+};
+
 addEventListener('keydown', (e)=> {
     switch (e.key) {
         case ' ':
