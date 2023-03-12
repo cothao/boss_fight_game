@@ -35,6 +35,7 @@ class Player {
         
         this.frameCount = this.sprites.idle.frameCount
         this.damage = damage
+        this.health = 100
     }
     draw() {
         c.drawImage(
@@ -179,6 +180,7 @@ class Enemy {
         this.isAttacking = false
         this.damage = damage
         this.isAlive = true
+        this.health = 100
     }
     draw() {
         c.drawImage(

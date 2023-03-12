@@ -251,7 +251,7 @@ enemy = new Enemy({
     },
     width: createImage('./img/monster/01_demon_idle/idle1.png').width,
     height: createImage('./img/monster/01_demon_idle/idle1.png').height +300,
-    damage: 4
+    damage: 22
 })
 
   platforms.forEach((platform) => {
@@ -401,10 +401,10 @@ collisionDetectionEnemy(enemy, player)
     if (collisionDetection(player, enemy)) {
       player.isAttacking = false;
       keys.attack.pressed = false;
-      enemyHealth.style.width = `${
-        parseInt(enemyHealth.style.width) - player.damage
-      }%`;
-      console.log(enemyHealth.style.width);
+      enemy.health -= player.damage
+      gsap.to('.healthbar', {
+        width: enemy.health + '%'
+      })
     }
   }
   
@@ -432,9 +432,10 @@ collisionDetectionEnemy(enemy, player)
 // GONNA FIX ATTACK ANIMATION SOON
 if (enemy.isAlive) {
       enemy.isAttacking = false;
-      playerHealth.style.width = `${
-        parseInt(playerHealth.style.width) - enemy.damage
-      }%`;
+      player.health -= enemy.damage
+      gsap.to('.player-health', {
+        width: player.health + '%'
+      })
     }
   }
 //     if (
@@ -451,7 +452,6 @@ if (enemy.isAlive) {
 //     enemy.velocity.dx = -enemy.velocity.dx;
 //   }
 }
-
 animate()
 
 window.onload = function () {
