@@ -55,7 +55,7 @@ const createImage = function(imageSrc) {
 }
 
 let keys, backgrounds, platforms, enemy, playerY, player
-
+let scrollOffset = 0
 const init = function() {
 
 keys = {
@@ -227,7 +227,7 @@ new Background({
 
 platforms = []
 
-for (let i = 0; i<20; i++) {
+for (let i = 0; i<50; i++) {
     
     platforms.push(new Objects({
         position: {
@@ -287,9 +287,16 @@ const animate = () => {
     if (player.position.x > 400 && keys.right.pressed) {
       background.position.x -= 3;
       player.velocity.dx = 0;
+      scrollOffset -= 1
     } else if (player.position.x < 100 && keys.left.pressed) {
-      background.position.x += 3;
-      player.velocity.dx = 0;
+      if (scrollOffset != 0) {
+        player.velocity.dx = 0
+        background.position.x += 3;
+        scrollOffset += 1
+        } else if (scrollOffset === 0) {
+          player.velocity.dx = 0
+          background.position.x += 0
+        }
     }
     //PARALAX UPWARD AND DOWNWARD. FOR LATER
     // if (player.position.y < 500) {
@@ -298,18 +305,23 @@ const animate = () => {
     //     background.position.y -= 0
     // }
   });
-if (collisionDetection(enemy, player)) {
-    console.log('no')
-}
-
+  
 collisionDetectionEnemy(enemy, player)
     
   platforms.forEach((platform) => platform.update());
   platforms.forEach((platform) => {
     if (player.position.x > 400 && keys.right.pressed) {
       platform.position.x -= 10;
+      scrollOffset -= 1
     } else if (player.position.x < 100 && keys.left.pressed) {
+      if (scrollOffset != 0) {
+        player.velocity.dx = 0
       platform.position.x += 10;
+      scrollOffset += 1
+      } else if (scrollOffset === 0) {
+        player.velocity.dx = 0
+        platform.position.x += 0
+      }
     }
     if (
       player.position.y + player.height <= platform.position.y &&
@@ -320,6 +332,7 @@ collisionDetectionEnemy(enemy, player)
         platform.position.x + platform.width
     ) {
       player.velocity.dy = 0;
+      player.jumps = 1
     }
     // FOR PARALAX
     // if (player.position.y < 500) {
@@ -396,6 +409,13 @@ collisionDetectionEnemy(enemy, player)
     player.currentSprite = player.sprites.attack.left;
     player.frameCount = player.sprites.attack.frameCount;
   }
+  if (keys.jump.pressed && player.jumps === 1) {
+    setTimeout(() => {
+      player.velocity.dy -= 20
+      keys.jump.pressed = false
+    }, 10)
+    player.jumps = 0
+  }
   // PLAYER HIT
   if (player.isAttacking && (player.frames === 5 || player.frames === 6)) {
     if (collisionDetection(player, enemy)) {
@@ -436,21 +456,22 @@ if (enemy.isAlive) {
       gsap.to('.player-health', {
         width: player.health + '%'
       })
+      player.velocity.dy -= 20
     }
   }
-//     if (
-//     (!playerDetection(player, enemy) && enemy.currentSprite === enemy.sprites.walk.left) 
-//     || enemy.currentSprite === enemy.sprites.idle.left
-//   ) {
-//     enemy.currentSprite = enemy.sprites.walk.left
-//     enemy.velocity.dx = -1;
-//   }
-//   if (enemy.position.x < 250) {
-//     console.log('REACH')
-//     enemy.velocity.dx = -enemy.velocity.dx;
-//   } else if (enemy.position.x > 1000) {
-//     enemy.velocity.dx = -enemy.velocity.dx;
-//   }
+
+  // PLAYER DEATH
+  if (player.health <= 0) {
+    player.isAlive = false
+  }
+  if (player.isAlive === false) {
+    keys.right.pressed = false
+    keys.left.pressed = false
+    player.velocity.dx = 0
+    player.frameCount = player.sprites.idle.frameCount
+    player.currentSprite = player.sprites.idle.right
+  }
+  console.log(player.velocity.dx)
 }
 animate()
 
@@ -462,9 +483,11 @@ window.onload = function () {
 };
 
 addEventListener('keydown', (e)=> {
+    
+  if (player.isAlive === true) {
     switch (e.key) {
         case ' ':
-        player.velocity.dy -= 20
+          keys.jump.pressed = true
         break
         case 'd':
         keys.right.pressed = true
@@ -478,11 +501,14 @@ addEventListener('keydown', (e)=> {
         keys.attack.pressed = true
         break
     }
+  }
 })
 
 addEventListener("keyup", (e) => {
+  if (player.isAlive === true) {
   switch (e.key) {
     case " ":
+      keys.jump.pressed = false
       break;
     case "d":
       keys.right.pressed = false;
@@ -492,5 +518,5 @@ addEventListener("keyup", (e) => {
       keys.left.pressed = false;
       keys.lastKey = 'a'
   }
+}
 });
-

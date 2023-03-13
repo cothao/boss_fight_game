@@ -23,6 +23,9 @@ class Player {
                 right: createImage('./img/atkRight.png'),
                 left: createImage('./img/Knight-Attack-Sheet.png'),
                 frameCount: 7
+            },
+            death: {
+                left: createImage('')
             }
         }
         this.attackBox = {
@@ -36,6 +39,8 @@ class Player {
         this.frameCount = this.sprites.idle.frameCount
         this.damage = damage
         this.health = 100
+        this.isAlive = true
+        this.jumps = 1
     }
     draw() {
         c.drawImage(
